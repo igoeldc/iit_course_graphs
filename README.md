@@ -1,6 +1,6 @@
-# 📘 IIT Course Graphs
+# 📘 Illinois Tech Course Graphs
 
-This project provides an interactive graph-based visualization of Illinois Tech course prerequisites for any subject using a Streamlit web app. It scrapes course data directly from IIT's course catalog by subject (e.g., MATH, CS, PHYS) and builds a dynamic dependency graph, enabling users to explore prerequisites and corequisites for courses.
+This project provides an interactive graph-based visualization of Illinois Tech course prerequisites for any subject using a Streamlit web app. It scrapes course data directly from Illinois Tech's course catalog by subject (e.g., MATH, CS, PHYS) and builds a dynamic dependency graph, enabling users to explore prerequisites and corequisites for courses.
 
 ---
 
@@ -47,7 +47,7 @@ Enter a subject code of your choice (e.g., MATH, CS, PHYS) and select courses fr
 
 ## 🧠 How it Works
 
-- Scrapes IIT's course catalog by subject using **BeautifulSoup**
+- Scrapes Illinois Tech's course catalog by subject using **BeautifulSoup**
 - Parses course blocks and extracts prerequisites and corequisites from HTML
 - Builds a directed graph using **NetworkX**
 - Displays the graph interactively using **matplotlib** or **PyVis**
@@ -68,7 +68,7 @@ Enter a subject code of your choice (e.g., MATH, CS, PHYS) and select courses fr
 
 ## 🖼 Example
 
-![Screenshot](initial_graph.png)
+![Screenshot](old/initial_graph.png)
 
 
 <!-- ---
