@@ -14,7 +14,7 @@ def join_course_code(subj, code, short=False):
     else:
         return f'{subj} {code}'
 
-def extract_courses_and_prereqs(url):
+def extract_courses_and_prereqs(url, short=False):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -28,7 +28,7 @@ def extract_courses_and_prereqs(url):
         subj, code = split_course_code(course_code)
         
         logging.debug(f'{subj} - {code}')
-        course = join_course_code(subj, code, short=True)
+        course = join_course_code(subj, code, short=short)
         course_list.append(course)
 
         # # Extract course description
@@ -57,7 +57,7 @@ def extract_courses_and_prereqs(url):
                         text = element.get_text(strip=True)
                         psubj, pcode = split_course_code(text)
                         logging.debug(f'{psubj} - {pcode}')
-                        prereq_code = join_course_code(psubj, pcode, short=True)
+                        prereq_code = join_course_code(psubj, pcode, short=short)
                         
                         is_coreq = False
                         if i + 1 < len(contents):

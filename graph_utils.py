@@ -2,7 +2,7 @@ import logging
 import networkx as nx
 from matplotlib.lines import Line2D
 import matplotlib.pyplot as plt
-import streamlit as st
+import streamlit as st # type: ignore
 
 
 logging.basicConfig(level=logging.INFO, format='(%(levelname)s) %(message)s')
