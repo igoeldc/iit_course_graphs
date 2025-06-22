@@ -25,7 +25,12 @@ if subjects:
         courses, prereqs = extract_courses_and_prereqs(URL(subject.lower()), short=False)
         courses_with_prereqs.extend(course for course in courses if prereqs.get(course))
         all_courses.extend(courses)
+        all_courses.extend(prereqs.keys())
+        for lst in prereqs.values():
+            all_courses.extend(pr[0] for pr in lst)
         all_prereqs.update(prereqs)
+    
+    all_courses = sorted(set(all_courses)) # FIXME: Orphaned branches should be removed (this was happening before)
     
     cg = CourseGraph(all_prereqs)
 
