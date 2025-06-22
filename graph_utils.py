@@ -32,6 +32,8 @@ class CourseGraph:
                     dfs(prereq)
 
         for course in target_courses:
+            if course not in self.full_graph:
+                self.full_graph.add_node(course)
             dfs(course)
         
         subgraph = self.full_graph.subgraph(sub_nodes).copy()
@@ -66,7 +68,11 @@ def list_of_lists(prereq_dict, include_coreqs=True):
     for node, d in depth.items():
         layers.setdefault(d, []).append(node)
 
+    if not layers:
+        return [[node] for node in prereq_dict if prereq_dict[node] == []]
+    
     return [sorted(layers[i]) for i in range(max(layers.keys()) + 1)]
+
 
 def visualize_lol(layered_nodes, prereq_dict, include_coreqs=True):
     G = nx.DiGraph()
@@ -79,7 +85,7 @@ def visualize_lol(layered_nodes, prereq_dict, include_coreqs=True):
         Line2D([0], [0], color='green', lw=2, label='Prerequisite'),
         Line2D([0], [0], color='blue', lw=2, label='Corequisite')
     ]
-
+    
     for course, prereqs in prereq_dict.items():
         for prereq_code, rel_type in prereqs:
             if not include_coreqs and rel_type == "coreq":
@@ -107,7 +113,6 @@ def visualize_lol(layered_nodes, prereq_dict, include_coreqs=True):
         )
     nx.draw_networkx_nodes(G, pos, alpha=0)
     nx.draw_networkx_edges(G, pos, edge_color=edge_colors, arrows=True, arrowsize=15, connectionstyle="arc3,rad=0.2")
-    plt.title("Course Prerequisite Graph (Layered by Depth)")
     plt.legend(handles=legend_elements, loc='lower right')
     st.pyplot(plt.gcf())
     plt.clf()

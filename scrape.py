@@ -30,6 +30,7 @@ def extract_courses_and_prereqs(url, short=False):
         logging.debug(f'{subj} - {code}')
         course = join_course_code(subj, code, short=short)
         course_list.append(course)
+        prereq_dict[course] = []
 
         # # Extract course description
         # desc_tag = courseblock.select_one(".courseblockdesc")
@@ -43,14 +44,8 @@ def extract_courses_and_prereqs(url, short=False):
         for attrblock in courseblock.select(".courseblockattr"):
             if 'Prerequisite' in attrblock.get_text():
                 logging.debug(attrblock.get_text())
-                # prereq_links = attrblock.select("a")
                 prereqs = []
                 contents = list(attrblock.children)
-                # for prereq in prereq_links:
-                #     psubj, pcode = split_course_code(prereq.get_text())
-                #     logging.debug(f'{psubj} - {pcode}')
-                #     prereq_code = join_course_code(psubj, pcode, short=True)
-                #     prereqs.append(prereq_code)
                 
                 for i, element in enumerate(contents):
                     if isinstance(element, Tag) and element.name == 'a':
@@ -65,20 +60,6 @@ def extract_courses_and_prereqs(url, short=False):
                             if isinstance(next_item, NavigableString) and "*" in next_item:
                                 is_coreq = True
                         prereqs.append((prereq_code, "coreq" if is_coreq else "prereq"))
-
-                    #     psubj, pcode = split_course_code(element.get_text(strip=True))
-                    #     logging.debug(f'{psubj} - {pcode}')
-                    #     prereq_code = join_course_code(psubj, pcode, short=True)
-                    #     prereqs.append(prereq_code)
-                    # elif isinstance(element, NavigableString) and element.strip():
-                    #     # Handle cases where prerequisites are listed as text
-                    #     prereq_text = element.strip()
-                    #     if prereq_text:
-                    #         # Match MATH xxx format
-                    #         match = re.match(r'MATH\s*(\d+)', prereq_text)
-                    #         if match:
-                    #             prereq_code = join_course_code('MATH', match.group(1), short=True)
-                    #             prereqs.append(prereq_code)
                 
                 prereq_dict[course] = prereqs
 
