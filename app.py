@@ -1,7 +1,7 @@
 import logging
 from scrape import extract_courses_and_prereqs
 from graph_utils import CourseGraph, list_of_lists, visualize_lol
-import streamlit as st # type: ignore
+import streamlit as st
 
 
 logging.basicConfig(level=logging.INFO, format='(%(levelname)s) %(message)s')
@@ -30,7 +30,7 @@ if subjects:
             all_courses.extend(pr[0] for pr in lst)
         all_prereqs.update(prereqs)
     
-    all_courses = sorted(set(all_courses)) # FIXME: Orphaned branches should be removed (this was happening before)
+    all_courses = sorted(set(all_courses))
     
     cg = CourseGraph(all_prereqs)
 
@@ -40,11 +40,25 @@ if subjects:
 
     if selected:
         subgraph = cg.get_subgraph(selected, include_coreqs=include_coreqs, as_dict=True)
-        
+
         if exclude:
             subgraph = {course: prereqs for course, prereqs in subgraph.items() if course not in exclude}
             for course in subgraph:
                 subgraph[course] = [pr for pr in subgraph[course] if pr[0] not in exclude]
-        
+
+            reachable = set()
+            def dfs(course):
+                if course in reachable or course not in subgraph:
+                    return
+                reachable.add(course)
+                for prereq_code, _ in subgraph[course]:
+                    dfs(prereq_code)
+
+            for course in selected:
+                if course not in exclude:
+                    dfs(course)
+
+            subgraph = {course: prereqs for course, prereqs in subgraph.items() if course in reachable}
+
         layers = list_of_lists(subgraph, include_coreqs=include_coreqs)
         visualize_lol(layers, subgraph, include_coreqs=include_coreqs)
