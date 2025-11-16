@@ -38,6 +38,8 @@ if subjects:
     exclude = st.multiselect("Exclude courses:", sorted(all_courses))
     include_coreqs = st.checkbox("Include corequisites", value=True)
 
+    st.info("ℹ️ Note: Only courses with prerequisites will appear in the graph. If a course has no prerequisites or all its prerequisites are excluded, it will not be displayed.")
+
     if selected:
         subgraph = cg.get_subgraph(selected, include_coreqs=include_coreqs, as_dict=True)
 
